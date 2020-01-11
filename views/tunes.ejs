@@ -1,0 +1,24 @@
+<%- include ('partials/header') %>
+
+<div class ="container">
+
+	<header class = "jumbotron">
+		<h1>
+			UnderratedTunes
+		</h1>
+		<p>Empowering songs and artists flying under the radar</p>
+		<p>
+			<a class ="btn btn-primary btn-lg" href ='/tunes/new'>Add New Song</a>
+		</p>
+	</header>
+
+	<%tunes.forEach(function(tune){%>
+		<div>
+			<h4><%= tune.name %></h4>
+			<h6><%= tune.artist %></h6>
+			<img src= "<%=tune.image%>">
+		</div>
+	<%});%>
+
+	<%- include ('partials/footer') %>
+</div>
