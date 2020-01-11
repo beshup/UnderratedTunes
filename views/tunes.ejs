@@ -1,8 +1,10 @@
 <%- include ('partials/header') %>
 
+
 <div class ="container">
 
 	<header class = "jumbotron">
+	<div class ="container">
 		<h1>
 			UnderratedTunes
 		</h1>
@@ -10,15 +12,24 @@
 		<p>
 			<a class ="btn btn-primary btn-lg" href ='/tunes/new'>Add New Song</a>
 		</p>
+	</div>
 	</header>
-
-	<%tunes.forEach(function(tune){%>
-		<div>
-			<h4><%= tune.name %></h4>
-			<h6><%= tune.artist %></h6>
-			<img src= "<%=tune.image%>">
-		</div>
-	<%});%>
-
+	
+	
+	<div class = "row" style="display:flex; flex-wrap: wrap;">	
+		<%tunes.forEach(function(tune){%>
+			<div class ="col-md-3 col-sm-6">
+				<div class ="thumbnail">
+					<img src= "<%=tune.image%>">
+					<div class ="caption">
+						<h4><%= tune.name %></h4>
+						<h6><%= tune.artist %></h6>
+					</div>
+				</div>
+			</div>
+		<%});%>
+	</div>
+	
+	
 	<%- include ('partials/footer') %>
 </div>

@@ -1,15 +1,24 @@
 <%- include('partials/header') %>
 
-<h1>
-	Create a new campground.
-</h1>
-
-<form action = '/tunes' method ='POST'>
-	<input type ='text' placeholder ='name' name ='name'>
-	<input type ='text' placeholder ='image url' name='image'>
-	<button>Submit</button>
-</form>
-
-<a href ='/tunes'>Go back</a>
-
+<div class ="container">
+	<div class ="row">
+		<h1 style ="text-align:center">
+			Submit a New Song
+		</h1>
+		<div style ="width:30%; margin: 20px auto">
+			<form action = '/tunes' method ='POST'>
+				<div class ="form-group">
+					<input class ="form-control" type ='text' placeholder ='name' name ='name'>
+				</div>
+				<div class ="form-group">
+					<input class ="form-control" type ='text' placeholder ='image url' name='image'>
+				</div>
+				<div class ="form-group">
+					<button class ="btn btn-lg btn-default btn-block btn-primary">Submit</button>
+				</div>
+			</form>
+			<a href ='/tunes'>Go back</a>
+		</div>
+	</div>
+</div>
 <%- include('partials/footer') %>
