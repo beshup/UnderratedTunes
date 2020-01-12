@@ -6,39 +6,63 @@
 			
 		</div>
 		<div class ="col-md-2">
-			<p class ="lead">UnderratedTunes</p>
 			<div class ="list-group">
-				<h1 class ="display-1">
+				<h1 class ="text-left" style="font-size:700%;">
 					<%= tune.dbpopularity%>
 				</h1>
+				<h6 width ="100%">
+					Recent popularity rank, as determined by Spotify activity. <em>(1-100)</em>
+				</h6>
 			</div>
 		</div>
 		<div class ='col-md-8'>
 			<div class ="thumbnail">
 				<img  class ="img-responsive" src ="<%=tune.dbimageurl%>">
-				<div class ="caption-full">
-					<h5 class ="pull-right"><strong><%= tune.dbartist %></strong></h5>
-					<h3><a href= "<%= tune.dblinkToTrack %>"><%=tune.dbtrack%></a></h3>
-					<p><em><%=tune.dbalbumName%></em></p>
-					<p>
-					<a class ="btn btn-lg btn-success ml-1" href = "<%= tune.dblinkToTrack %>">Listen On Spotify</a>
-					</p>
+				<div class ="caption-full caption row">
+					<div class ="col-md-6">
+						<h3><a href= "<%= tune.dblinkToTrack %>"><%=tune.dbtrack%></a></h3>
+						<h5><strong><%= tune.dbartist %></strong></h5>
+						<p><em><%=tune.dbalbumName%></em></p>
+					</div>
+					<div class ="col-md-3">
+						
+					</div>
+					<div class ="col-md-3">
+						<a class ="btn btn-lg btn-success pull-right" style="margin-top: 20%;" href = "<%= tune.dblinkToTrack %>">Listen Here</a>
+					</div>				
 				</div>
 			</div>
-		</div>
+			<div class ="well">
+				<div class= "row">
+					<div class ="col-md-3">
+						
+					</div>
+					<div class ="col-md-6">
+						
+					</div>
+					<div class ="col-md-3">
+						<a href='/tunes/<%=tune._id %>/comments/new' class ='btn btn-warning'>Add New Comment</a>
+					</div>
+				</div>
+				<hr>
+				<% tune.comments.forEach(function(comment){ %>
+					<div class ="row">
+						<div class ="col-md-12">
+							<strong><%= comment.author %></strong>
+							<span class ="pull-right">10 days ago</span>
+							<p>
+								<%= comment.text %>
+							</p>
+						</div>
+					</div>					
+				<%});%>
+			</div>
 		<div class ="col-md-1">
 			
 		</div>
 	</div>
 </div>
 
-<p>
-	<a href='/tunes/<%=tune._id %>/comments/new' class ='btn btn-warning'>Add New Comment</a>
-</p>
-
-<% tune.comments.forEach(function(comment){ %>
-	<p><strong><%= comment.author %></strong> - <%= comment.text %></p>
-<%});%>
 
 <%- include('../partials/footer')%>
 	
