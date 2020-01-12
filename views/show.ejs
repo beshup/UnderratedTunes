@@ -1,0 +1,19 @@
+<%- include('partials/header')%>
+
+<h1>
+	this is the show template
+</h1>
+
+<p>
+	<%= tune.dbtrack %>
+	<a class ="btn btn-lg btn-success ml-1" href = "<%= tune.dblinkToTrack %>">Spotify Link</a>
+</p>
+
+<img src ="<%=tune.dbimageurl%>">
+
+<p><%= tune.dbalbumName %></p>
+<p><%= tune.dbartist %></p>
+<p><%= tune.dbpopularity %></p>
+
+<%- include('partials/footer')%>
+	
