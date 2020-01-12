@@ -1,0 +1,44 @@
+<%- include('../partials/header')%>
+
+<div class ="container">
+	<div class ="row">
+		<div class ="col-md-1">
+			
+		</div>
+		<div class ="col-md-2">
+			<p class ="lead">UnderratedTunes</p>
+			<div class ="list-group">
+				<h1 class ="display-1">
+					<%= tune.dbpopularity%>
+				</h1>
+			</div>
+		</div>
+		<div class ='col-md-8'>
+			<div class ="thumbnail">
+				<img  class ="img-responsive" src ="<%=tune.dbimageurl%>">
+				<div class ="caption-full">
+					<h5 class ="pull-right"><strong><%= tune.dbartist %></strong></h5>
+					<h3><a href= "<%= tune.dblinkToTrack %>"><%=tune.dbtrack%></a></h3>
+					<p><em><%=tune.dbalbumName%></em></p>
+					<p>
+					<a class ="btn btn-lg btn-success ml-1" href = "<%= tune.dblinkToTrack %>">Listen On Spotify</a>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class ="col-md-1">
+			
+		</div>
+	</div>
+</div>
+
+<p>
+	<a href='/tunes/<%=tune._id %>/comments/new' class ='btn btn-warning'>Add New Comment</a>
+</p>
+
+<% tune.comments.forEach(function(comment){ %>
+	<p><strong><%= comment.author %></strong> - <%= comment.text %></p>
+<%});%>
+
+<%- include('../partials/footer')%>
+	

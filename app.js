@@ -6,7 +6,8 @@ var express    = require('express'),
 	fetch      = require('isomorphic-fetch'),
 	Spotify    = require('node-spotify-api'),
 	Tune       = require('./models/tune'),
-	seedDB     = require('./seeds');
+	seedDB     = require('./seeds'),
+	Comment    = require('./models/comments')
 
 seedDB();
 require('dotenv').config();
@@ -41,7 +42,7 @@ app.get('/tunes', function(req, res){
 			console.log(err);
 		}
 		else{
-			res.render('index', {tunes: tunes});
+			res.render('tunes/index', {tunes: tunes});
 		}
 	});
 });
@@ -137,7 +138,7 @@ app.post('/tunes', function(req, res){
 
 //NEW - show form to create new tune
 app.get('/tunes/new', function(req, res){
-	res.render('new');
+	res.render('tunes/new');
 });
 
 //SHOW - show more info about particular tune
@@ -150,9 +151,51 @@ app.get('/tunes/:id', function(req, res){
 		else{
 			console.log(foundTune);
 			//render show template with that tune
-			res.render('show', {tune: foundTune});
+			res.render('tunes/show', {tune: foundTune});
 		}
 	});
+});
+
+// ================
+// COMMENTS ROUTES
+// ================
+
+app.get('/tunes/:id/comments/new', function(req, res){
+	// find tune by id and sent that through when we render
+	Tune.findById(req.params.id, function(err, tune){
+		if(err){
+			console.log(err);
+		}
+		else{
+			res.render('comments/new', {tune: tune});
+		}
+	});
+});
+
+app.post('/tunes/:id/comments', function(req, res){
+	// look up tune using ID
+	// create new comment
+	//connect new comment to campground
+	// redirect back to tune show page
+	Tune.findById(req.params.id, function(err, tune){
+		if(err){
+			console.log(err);
+			res.redirect('/tunes');
+		}
+		else{
+			// we can do this because we named our inputs like 'comment[text]' so create a comment object for us
+			Comment.create(req.body.comment, function(err, comment){
+				if(err){
+					console.log(err);
+				}
+				else{
+					tune.comments.push(comment);
+					tune.save();
+					res.redirect('/tunes/' + tune._id);
+				}
+			});
+		}
+	})
 });
 	
 app.listen(3000, function(){
