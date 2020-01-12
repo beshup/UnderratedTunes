@@ -7,10 +7,31 @@ var express    = require('express'),
 	Spotify    = require('node-spotify-api'),
 	Tune       = require('./models/tune'),
 	seedDB     = require('./seeds'),
-	Comment    = require('./models/comments')
+	Comment    = require('./models/comments'),
+	passport   = require('passport'),
+	LocalStrategy = require('passport-local'),
+	User       = require('./models/user')
 
 seedDB();
 require('dotenv').config();
+app.use(express.static(__dirname + '/public'));
+
+//passport config
+app.use(require('express-session')({
+	secret: "Will I ever remember this statement?",
+	resave: false,
+	saveUninitialized: false
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	next();
+});
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -42,7 +63,7 @@ app.get('/tunes', function(req, res){
 			console.log(err);
 		}
 		else{
-			res.render('tunes/index', {tunes: tunes});
+			res.render('tunes/index', {tunes: tunes, currentUser: req.user});
 		}
 	});
 });
@@ -160,7 +181,7 @@ app.get('/tunes/:id', function(req, res){
 // COMMENTS ROUTES
 // ================
 
-app.get('/tunes/:id/comments/new', function(req, res){
+app.get('/tunes/:id/comments/new', isLoggedIn, function(req, res){
 	// find tune by id and sent that through when we render
 	Tune.findById(req.params.id, function(err, tune){
 		if(err){
@@ -172,7 +193,7 @@ app.get('/tunes/:id/comments/new', function(req, res){
 	});
 });
 
-app.post('/tunes/:id/comments', function(req, res){
+app.post('/tunes/:id/comments', isLoggedIn, function(req, res){
 	// look up tune using ID
 	// create new comment
 	//connect new comment to campground
@@ -197,7 +218,60 @@ app.post('/tunes/:id/comments', function(req, res){
 		}
 	})
 });
+
+// ===========
+//AUTH ROUTES
+// ==========
+
+// show register form
+
+app.get('/register', function(req, res){
+	res.render('register');
+});
+
+//handle sgn up logic
+app.post('/register', function(req, res){
+	var newUser = new User({username: req.body.username});
+	User.register(newUser, req.body.password, function(err, user){
+		if(err){
+			console.log(err);
+			return res.render('register');
+		}
+		passport.authenticate('local')(req, res, function(){
+			res.redirect('/tunes');
+		});
+	});
+})
+
+//show login form
+
+app.get('/login', function(req, res){
+	res.render('login');
+});
+
+// handles login logic
+app.post('/login', passport.authenticate("local", 
+		{
+			successRedirect: "/tunes",
+			failureRedirect: '/login'						  
+		}), function(req, res){
 	
+});
+	
+//logout route
+app.get('/logout', function(req, res){
+	req.logout();
+	res.redirect('/tunes');
+});
+
+//have this act as middleware
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect('/login');
+}
+
 app.listen(3000, function(){
 	console.log('Underrated Tunes server has started.');
 });
