@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 var Tune = require('../models/tune');
+var methodOverride = require('method-override');
+router.use(methodOverride("_method"));
 
 var Spotify = require('node-spotify-api');
 	
@@ -135,6 +137,35 @@ router.get('/:id', function(req, res){
 	});
 });
 
+//destroy tune route
+
+router.delete("/:id/", (req, res) => {
+    Tune.findById(req.params.id, (err, foundTune) => {
+        if(err) {
+            console.log(err);
+        } else { // if there are comments, delete comments first		
+	    if(foundTune.comments.length > 0){				
+	        foundTune.comments.forEach((comment)=>{
+	            Comment.findByIdAndRemove(comment, (err) => {
+		        if(err) {
+                            console.log(err);
+		        } 
+                    });					
+	        });	
+            } 
+        }
+    });	
+    Tune.findByIdAndRemove(req.params.id, (err)=> {
+        if(err) {
+	    console.log(err);
+            res.redirect("/tunes");
+        } else {
+    	    res.redirect("/tunes");
+        }
+    });	
+ 
+}); 
+
 //have this act as middleware
 function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){
@@ -142,5 +173,29 @@ function isLoggedIn(req, res, next){
 	}
 	res.redirect('/login');
 }
+
+//other middleware
+//check post ownership
+
+function checkTuneOwnerShip(req, res, next){
+	if (req.isAuthenticated()){
+		Tune.findById(req.params.id, function(err, foundTune){
+			if(err){
+				res.redirect('/tunes');
+			}
+			else{
+				// is it their post?
+				if(foundTune.author.id.equals(req.user._id)){
+					res.render('')
+				}
+			}
+		})
+	}
+	else{
+		res.redirect('back');
+	}
+}
+
+
 
 module.exports = router;

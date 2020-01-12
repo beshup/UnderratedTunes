@@ -9,6 +9,7 @@ var express    = require('express'),
 	seedDB     = require('./seeds'),
 	Comment    = require('./models/comments'),
 	passport   = require('passport'),
+	methodOverride = require('method-override'),
 	LocalStrategy = require('passport-local'),
 	User       = require('./models/user')
 
@@ -55,6 +56,7 @@ app.set('view engine', 'ejs');
 app.use('/', indexRoutes);
 app.use('/tunes', tuneRoutes);
 app.use('/tunes/:id/comments', commentRoutes);
+app.use(methodOverride("_method"));
 
 app.listen(3000, function(){
 	console.log('Underrated Tunes server has started.');
