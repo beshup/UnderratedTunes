@@ -4,8 +4,11 @@ var express    = require('express'),
  	mongoose   = require('mongoose'),
 	request    = require('request'),
 	fetch      = require('isomorphic-fetch'),
-	Spotify    = require('node-spotify-api')
- 
+	Spotify    = require('node-spotify-api'),
+	Tune       = require('./models/tune'),
+	seedDB     = require('./seeds');
+
+seedDB();
 require('dotenv').config();
 
 mongoose.set('useNewUrlParser', true);
@@ -21,19 +24,6 @@ var spotify = new Spotify({
   id: process.env.CLIENT_ID,
   secret: process.env.CLIENT_SECRET
 });
-
-var tuneSchema = new mongoose.Schema({
-	dbtrack: String,
-	dbtrackId: String,
-	dbimageurl: String,
-	dbartist: String,
-	dblinkToTrack: String,
-	dbpopularity: Number,
-	dbalbumName: String,
-	dbupvotes: Number
-});
-
-var Tune = mongoose.model("Tune", tuneSchema);
 
 app.use(bodyParser.urlencoded({extended:true}));
 app.set('view engine', 'ejs');
@@ -153,11 +143,12 @@ app.get('/tunes/new', function(req, res){
 //SHOW - show more info about particular tune
 app.get('/tunes/:id', function(req, res){
 	//find tune with given id
-	Tune.findById(req.params.id, function(err, foundTune){
+	Tune.findById(req.params.id).populate('comments').exec(function(err, foundTune){
 		if(err){
 			console.log(err);
 		}
 		else{
+			console.log(foundTune);
 			//render show template with that tune
 			res.render('show', {tune: foundTune});
 		}
