@@ -6,9 +6,15 @@ var tuneSchema = new mongoose.Schema({
 	dbimageurl: String,
 	dbartist: String,
 	dblinkToTrack: String,
+	author: {
+		id: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: "User"
+		},
+		username: String
+	},
 	dbpopularity: Number,
 	dbalbumName: String,
-	dbupvotes: Number,
 	comments: [
 		{
 			type: mongoose.Schema.Types.ObjectId,

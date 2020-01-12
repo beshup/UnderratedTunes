@@ -2,6 +2,7 @@ var mongoose = require("mongoose");
 var Tune = require("./models/tune");
 var Comment   = require("./models/comments");
  
+
 var data = [
     {
         dbtrack:'Good Vibes',
@@ -31,13 +32,16 @@ var data = [
 		dbalbumName:'Fashion Week (feat. AJ Tracey & MoStack)'
     }   
 ]
+
  
 function seedDB(){
    //Remove all tunes
    Tune.deleteMany({}, function(err){
+	   
         if(err){
             console.log(err);
         }
+	   
         console.log("removed tunes!");
         Comment.deleteMany({}, function(err) {
             if(err){
@@ -69,6 +73,7 @@ function seedDB(){
                 });
             });
         });
+		
     }); 
     //add a few comments
 }

@@ -23,6 +23,7 @@
 						<h3><a href= "<%= tune.dblinkToTrack %>"><%=tune.dbtrack%></a></h3>
 						<h5><strong><%= tune.dbartist %></strong></h5>
 						<p><em><%=tune.dbalbumName%></em></p>
+						<h6><em>Posted By </em><span class = "red"><%=tune.author.username%></span></h6>
 					</div>
 					<div class ="col-md-3">
 						
@@ -48,7 +49,7 @@
 				<% tune.comments.forEach(function(comment){ %>
 					<div class ="row">
 						<div class ="col-md-12">
-							<strong><%= comment.author %></strong>
+							<strong><%= comment.author.username %></strong>
 							<span class ="pull-right">10 days ago</span>
 							<p>
 								<%= comment.text %>

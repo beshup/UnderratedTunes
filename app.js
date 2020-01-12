@@ -17,7 +17,7 @@ var commentRoutes = require('./routes/comments'),
 	indexRoutes = require('./routes/index')
 
 
-seedDB();
+//seedDB(); //seeding the database
 require('dotenv').config();
 app.use(express.static(__dirname + '/public'));
 

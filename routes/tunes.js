@@ -36,8 +36,7 @@ router.post('/', function(req, res){
 		artist = String,
 		linkToTrack = String,
 		popularity = String,
-		albumName = String,
-		upvotes = 0;
+		albumName = String
 	
 	//console.log(link);
 	
@@ -94,8 +93,11 @@ router.post('/', function(req, res){
 		console.log(artist);
 		console.log(linkToTrack);
 		*/
-		
-		var newTune = {dbtrack: track, dbtrackID: trackID, dbalbumName: albumName, dbimageurl: imageurl, 									dbpopularity: popularity, dbartist: artist, dblinkToTrack: linkToTrack};
+		var author = {
+			id: req.user._id,
+			username: req.user.username
+		}
+		var newTune = {dbtrack: track, dbtrackID: trackID, dbalbumName: albumName, dbimageurl: imageurl, 									dbpopularity: popularity, dbartist: artist, dblinkToTrack: linkToTrack, author:author};
 		// create new tunes and save to dB
 		
 		Tune.create(newTune, function(error, newlyCreated){
@@ -113,7 +115,7 @@ router.post('/', function(req, res){
 
 
 //NEW - show form to create new tune
-router.get('/new', function(req, res){
+router.get('/new', isLoggedIn, function(req, res){
 	res.render('tunes/new');
 });
 
@@ -125,11 +127,20 @@ router.get('/:id', function(req, res){
 			console.log(err);
 		}
 		else{
-			console.log(foundTune);
+			//console.log(foundTune);
+			//console.log(foundTune.author);
 			//render show template with that tune
 			res.render('tunes/show', {tune: foundTune});
 		}
 	});
 });
+
+//have this act as middleware
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect('/login');
+}
 
 module.exports = router;
