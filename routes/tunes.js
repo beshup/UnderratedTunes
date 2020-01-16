@@ -14,15 +14,36 @@ var spotify = new Spotify({
 });
 
 router.get('/', function(req, res){
-	
-	Tune.find({}, function(err, tunes){
+	if(req.query.search){
+		var noMatch = null; 
+		const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        // Get all campgrounds from DB
+		//var finalResults =[];
+		//search in track name
+        Tune.find({dbtrack: regex}, function(err, allTunes){
+           if(err){
+               console.log(err);
+           } else {
+			  
+              if(allTunes.length < 1) {
+                  req.flash('error', "No matches.")
+				  res.redirect('back');
+              }
+        	  res.render('tunes/index', {tunes: allTunes});
+           }
+        });
+			
+	} 
+	else{
+		Tune.find({}, function(err, tunes){
 		if (err){
 			console.log(err);
 		}
 		else{
 			res.render('tunes/index', {tunes: tunes, currentUser: req.user});
 		}
-	});
+		});
+	}
 });
 
 
@@ -224,6 +245,8 @@ function checkTuneOwnerShip(req, res, next){
 	}
 }
 
-
+function escapeRegex(text){
+	return text.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+};
 
 module.exports = router;

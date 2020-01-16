@@ -8,10 +8,18 @@
 		<h1>
 			UnderratedTunes
 		</h1>
-		<p>Empowering songs and artists flying under the radar<p>
-		<h5 class ="mt-0"><small><em>Utilizing Spotify's metadata, the least popular tracks (the ones with the least recent interaction) are sorted up to the top of our site.</em></small></p>
+		<p>Empowering songs and artists flying under the radar</p>
+		<h5 class ="mt-0"><small><em>Utilizing Spotify's metadata, the least popular tracks (the ones with the least recent interaction) are sorted up to the top of our site.</em></small></h5>
 		<h5>
 			<a class ="btn btn-primary btn-lg" href ='/tunes/new'>Add New Song</a>
+		</h5>
+		<p>
+			<form action ='/tunes' method='GET' class ='form-inline'>
+				<div class ='form-group'>
+					<input type="text" name="search" placeholder="Track search..." class='form-control'>
+					<input type="submit" value="Search" class='btn btn-default'>
+				</div>
+			</form>
 		</p>
 	</div>
 	</header>
@@ -36,6 +44,7 @@
 		<%});%>
 	</div>
 	
-	
+	<div style = "clear:both;" class="footer-copyright text-center py-3">© 2020 Copyright: Ishan Ghimire
+  	</div>
 	<%- include ('../partials/footer') %>
 </div>

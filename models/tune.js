@@ -14,6 +14,10 @@ var tuneSchema = new mongoose.Schema({
 		username: String
 	},
 	dbpopularity: Number,
+	createdAt: {
+		type: Date, 
+		default: Date.now
+	},
 	dbalbumName: String,
 	comments: [
 		{
