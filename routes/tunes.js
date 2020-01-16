@@ -41,6 +41,11 @@ router.post('/', function(req, res){
 		albumName = String
 	
 	//console.log(link);
+	var check1 = link.slice(0, 31);
+	if (check1 != "https://open.spotify.com/track/" || link.charAt(53) != "?"){
+		req.flash("spotifyLinkErr", "You didn't enter a spotify link to a track.");
+		res.redirect('/tunes');
+	}
 	
 	var kcharPos=0;
 	for (var i=0; i<link.length; i++){
@@ -85,6 +90,10 @@ router.post('/', function(req, res){
 		albumName = data['album']['name'];
 		if (data['album']['images'].length > 0){
 			imageurl = data['album']['images'][0]['url'];
+		}
+		if (!data['album']['images']){
+			req.flash("spotifyLinkErr", "You didn't enter a spotify link to a track.");
+			res.redirect('/tunes');
 		}
 		/*
 		console.log(track);
@@ -171,9 +180,11 @@ router.delete("/:id", checkTuneOwnerShip, (req, res) => {
 router.delete("/:id", checkTuneOwnerShip, function(req, res){
 	Tune.findByIdAndRemove(req.params.id, function(err){
 		if(err){
+			req.flash("error", "Something went wrong.");
 			res.redirect("/tunes");
 		}
 		else{
+			req.flash("Deleted post.");
 			res.redirect("/tunes");
 		}
 	});
@@ -184,6 +195,7 @@ function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){
 		return next();
 	}
+	req.flash('error', 'You need to be logged in to do that.')
 	res.redirect('/login');
 }
 

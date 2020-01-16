@@ -22,10 +22,10 @@ router.post('/register', function(req, res){
 	var newUser = new User({username: req.body.username});
 	User.register(newUser, req.body.password, function(err, user){
 		if(err){
-			console.log(err);
-			return res.render('register');
+			return res.render("register", {"error": err.message});
 		}
 		passport.authenticate('local')(req, res, function(){
+			req.flash("success", "Welcome to UnderratedTunes, " + user.username + ".");
 			res.redirect('/tunes');
 		});
 	});
@@ -49,6 +49,7 @@ router.post('/login', passport.authenticate("local",
 //logout route
 router.get('/logout', function(req, res){
 	req.logout();
+	req.flash("success", "Logged you out.");
 	res.redirect('/tunes');
 });
 

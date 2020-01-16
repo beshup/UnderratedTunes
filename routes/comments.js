@@ -32,6 +32,7 @@ router.post('/', isLoggedIn, function(req, res){
 			// we can do this because we named our inputs like 'comment[text]' so create a comment object for us
 			Comment.create(req.body.comment, function(err, comment){
 				if(err){
+					req.flash(error, "Something went wrong.")
 					console.log(err);
 				}
 				else{
@@ -42,6 +43,7 @@ router.post('/', isLoggedIn, function(req, res){
 					comment.save();
 					tune.comments.push(comment);
 					tune.save();
+					req.flash(success, "Added comment.");
 					res.redirect('/tunes/' + tune._id);
 				}
 			});
@@ -53,6 +55,7 @@ function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){
 		return next();
 	}
+	req.flash("error", "You need to be logged in to do that.");
 	res.redirect('/login');
 }
 
